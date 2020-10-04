@@ -4,11 +4,19 @@
 <head>
 	<title>com.elgato.numberdisplay</title>
 	<meta charset="utf-8" />
+        <script src="https://cdn.jsdelivr.net/npm/autobahn-js-built@0.11.1/autobahn.min.js"></script>
 </head>
 
 <body>
 	<script>
+		var connection = new autobahn.Connection({url: 'wss://crossbar.hackafe.net:7778/ws', realm: 'realm1'});
+		var wamp = undefined;
+		connection.onopen = function (session) {
+		    console.log("Connected");
+		    wamp = session;
+		};
 
+		connection.open();
 		var websocket = null;
 		var pluginUUID = null;
 		var settingsCache = {};
@@ -20,6 +28,7 @@
 			type: "com.elgato.numberdisplay.action",
 
 			onKeyDown: function (context, settings, coordinates, userDesiredState) {
+				wamp.publish('com.discordspeak', ['Hello world',]);
 			},
 
 			onKeyUp: function (context, settings, coordinates, userDesiredState) {
